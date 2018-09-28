@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="/css/style.css">
+    </head>
+    <body>
+        <button id="new">New Game</button>
+        <div id="gameContainer">
+            
+            <div id="game">
+                <label class="status">Remaining Guesses: <span id="remaining_guesses"></span></label><br/>
+                <label class="status">Letters Guessed: <span id="lettersGuessed"></span></label><br/><br/>
+                <label class="status" id="word"></label>
+            </div>
+            
+            <div id="messageContainer">
+                <input type="text" id="input" placeholder="Guess a letter"><br/><br/>
+                <div id="messages"></div>
+            </div>
+        </div>
+
+        <script src="js/functions.js"></script>
+    </body>
+</html>

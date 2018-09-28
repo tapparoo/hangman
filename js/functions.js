@@ -27,7 +27,7 @@ Hangman.prototype.checkGuess = function(g){
     // Clear messages
     msgs.textContent = '';
 
-    const re = /[A-Z]/g;
+    const re = /[a-zA-Z]/g;
     let guess;
     
     // Check input against regex
@@ -89,8 +89,8 @@ document.querySelector('#new').addEventListener('click', newGame)
 input.addEventListener('keyup', makeGuess)
 
 // Random word generator
-let getWord = function (){
-    let words = ['abruptly', 'absurd', 'abyss', 'affix', 'askew', 'avenue', 'awkward', 'axiom', 'azure', 'bagpipes', 'bandwagon'
+const getWord = function (){
+    const words = ['abruptly', 'absurd', 'abyss', 'affix', 'askew', 'avenue', 'awkward', 'axiom', 'azure', 'bagpipes', 'bandwagon'
 , 'banjo', 'bayou', 'beekeeper', 'bikini', 'blitz', 'blizzard', 'boggle', 'bookworm', 'boxcar', 'boxful'
 , 'buckaroo', 'buffalo', 'buffoon', 'buxom', 'buzzard', 'buzzing', 'buzzwords', 'caliph', 'cobweb', 'cockiness'
 , 'croquet', 'crypt', 'curacao', 'cycle', 'daiquiri', 'dirndl', 'disavow', 'dizzying', 'duplex', 'dwarves'
@@ -112,7 +112,7 @@ let getWord = function (){
 , 'whiskey', 'whizzing', 'whomever', 'wimpy', 'witchcraft', 'wizard', 'woozy', 'wristwatch', 'wyvern', 'xylophone'
 , 'yachtsman', 'yippee', 'yoked', 'youthful', 'yummy', 'zephyr', 'zigzag', 'zigzagging', 'zilch', 'zipper'
 , 'zodiac', 'zombie'];
-    let rand = Math.floor(Math.random() * (words.length + 1));
+    const rand = Math.floor(Math.random() * (words.length + 1));
     return words[rand];
 }
 

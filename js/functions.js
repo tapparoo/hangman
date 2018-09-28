@@ -1,30 +1,18 @@
+'use strict'
 
 let game;
-let puzzle = document.querySelector('#word');
-let msgs = document.querySelector('#messages');
-
-// New game on button click
-document.querySelector('#new').addEventListener('click',function(){
-    game = new Hangman(getWord());
-    game.updateGameStatus();
-    msgs.textContent = '';
-    document.querySelector('#input').disabled = false;
-})
-
-// Update game values per key press
-document.querySelector('#input').addEventListener('keyup', function(e){
-    e.preventDefault();
-    game.makeGuess(e.target.value);
-    game.updateGameStatus();
-    e.target.value = '';
-})
+const puzzle = document.querySelector('#word');
+const msgs = document.querySelector('#messages');
+const input = document.querySelector('#input');
 
 // New game constructor
 const Hangman = function (word, remainingGuesses = 10) {
     this.guesses = [];
     this.word = word.toUpperCase().split('');
-    this.revealed = this.word.map(char => char === ' ' ? ' ' : '*')
     this.remainingGuesses = remainingGuesses;
+    // Ignore spaces
+    this.revealed = this.word.map(char => char === ' ' ? ' ' : '*');
+    this.updateGameStatus();
 }
 
 // Update game values
@@ -35,11 +23,11 @@ Hangman.prototype.updateGameStatus = function(){
 }
 
 // Check for correct guesses, invalid inputs, etc
-Hangman.prototype.makeGuess = function(g){ 
+Hangman.prototype.checkGuess = function(g){ 
     // Clear messages
     msgs.textContent = '';
 
-    const re = /[a-zA-Z]/g;
+    const re = /[A-Z]/g;
     let guess;
     
     // Check input against regex
@@ -66,7 +54,7 @@ Hangman.prototype.makeGuess = function(g){
         // If no more asterisks, user wins & game is over
         if (this.revealed.findIndex(char => char === '*') < 0){
             msgs.textContent = `Congrats, you win!  The word was ${this.word.join('')}`;
-            document.querySelector('#input').disabled = true;
+            input.disabled = true;
         }
     }
     // Incorrect guess.  Push to guesses[], subtract 1 from remainingGuesses, end game if remainingGuesses === 0
@@ -75,10 +63,30 @@ Hangman.prototype.makeGuess = function(g){
         this.remainingGuesses -= 1;
         if (this.remainingGuesses === 0){
             msgs.textContent = `You lose!  The word was: ${this.word.join('')}`;
-            document.querySelector('#input').disabled = true;
+            input.disabled = true;
         }
     }
 }
+
+// Called by input keyup event listener below
+function makeGuess(e){
+    game.checkGuess(e.target.value);
+    game.updateGameStatus();
+    e.target.value = '';
+}
+
+// Called by button click event listener below
+function newGame(){
+    game = new Hangman(getWord());
+    msgs.textContent = '';
+    input.disabled = false;
+}
+
+// New game on button click
+document.querySelector('#new').addEventListener('click', newGame)
+
+// Update game values per key press
+input.addEventListener('keyup', makeGuess)
 
 // Random word generator
 let getWord = function (){
@@ -104,11 +112,10 @@ let getWord = function (){
 , 'whiskey', 'whizzing', 'whomever', 'wimpy', 'witchcraft', 'wizard', 'woozy', 'wristwatch', 'wyvern', 'xylophone'
 , 'yachtsman', 'yippee', 'yoked', 'youthful', 'yummy', 'zephyr', 'zigzag', 'zigzagging', 'zilch', 'zipper'
 , 'zodiac', 'zombie'];
-    let ran = Math.ceil(Math.random() * words.length);
-    return words[ran];
+    let rand = Math.floor(Math.random() * (words.length + 1));
+    return words[rand];
 }
 
-// Quick and dirty initial start
-document.querySelector('#new').click();
-
+// Initial start
+game = new Hangman(getWord());
 

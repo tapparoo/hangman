@@ -5,72 +5,69 @@ const puzzle = document.querySelector('#word');
 const msgs = document.querySelector('#messages');
 const input = document.querySelector('#input');
 
-// New game constructor
-const Hangman = function (word, remainingGuesses = 10) {
-    this.guesses = [];
-    this.word = word.toUpperCase().split('');
-    this.remainingGuesses = remainingGuesses;
-    // Ignore spaces
-    this.revealed = this.word.map(char => char === ' ' ? ' ' : '*');
-    this.gameRunning = true;
-    this.updateGameStatus();
-}
-
-// Update game values
-Hangman.prototype.updateGameStatus = function(){
-    document.querySelector('#remaining_guesses').textContent = this.remainingGuesses;
-    document.querySelector('#lettersGuessed').textContent = this.guesses.sort();
-    puzzle.textContent = `${this.revealed.join('')}`;
-}
-
-// Check for correct guesses, invalid inputs, etc
-Hangman.prototype.checkGuess = function(g){ 
-    // Clear messages
-    msgs.textContent = '';
-
-    const re = /[a-zA-Z]/g;
-    let guess;
-    
-    // Check input against regex
-    if (!g.match(re)){
-        msgs.textContent =`${g} is an incorrect input value, try again!`;
-        return;
-    }else {
-        guess = g.toUpperCase();
+class Hangman {
+    constructor(word, remainingGuesses = 10) {
+        this.guesses = [];
+        this.word = word.toUpperCase().split('');
+        this.remainingGuesses = remainingGuesses;
+        // Ignore spaces
+        this.revealed = this.word.map(char => char === ' ' ? ' ' : '*');
+        this.gameRunning = true;
+        this.updateGameStatus();
     }
-    
-    // Already guessed?  Notify user & return
-    if (this.guesses.findIndex(char => char === guess) > -1){
-        msgs.textContent = `${g} was already guessed, try again!`;
-        return;
+    updateGameStatus() {
+        document.querySelector('#remaining_guesses').textContent = this.remainingGuesses;
+        document.querySelector('#lettersGuessed').textContent = this.guesses.sort();
+        puzzle.textContent = `${this.revealed.join('')}`;
     }
-    // Correct guess? Push to guesses[] & remove * from appropriate position(s) in puzzle
-    else if (this.word.findIndex(char => char === guess) > -1){
-        this.guesses.push(guess);
-        for (let i = 0; i < this.word.length; i++){
-            if (this.word[i] === guess){
-                this.revealed[i] = guess;
+    checkGuess(g) { 
+        // Clear messages
+        msgs.textContent = '';
+    
+        const re = /[a-zA-Z]/g;
+        let guess;
+        
+        // Check input against regex
+        if (!g.match(re)) {
+            msgs.textContent =`${g} is an incorrect input value, try again!`;
+            return;
+        }else {
+            guess = g.toUpperCase();
+        }
+        
+        // Already guessed?  Notify user & return
+        if (this.guesses.findIndex(char => char === guess) > -1) {
+            msgs.textContent = `${g} was already guessed, try again!`;
+            return;
+        }
+        // Correct guess? Push to guesses[] & remove * from appropriate position(s) in puzzle
+        else if (this.word.findIndex(char => char === guess) > -1) {
+            this.guesses.push(guess);
+            for (let i = 0; i < this.word.length; i++) {
+                if (this.word[i] === guess){
+                    this.revealed[i] = guess;
+                }
+            }
+            // If no more asterisks, user wins & game is over
+            if (this.revealed.findIndex(char => char === '*') < 0) {
+                msgs.textContent = `Congrats, you win!  The word was ${this.word.join('')}`;
+                this.gameRunning = false;
             }
         }
-        // If no more asterisks, user wins & game is over
-        if (this.revealed.findIndex(char => char === '*') < 0){
-            msgs.textContent = `Congrats, you win!  The word was ${this.word.join('')}`;
-            this.gameRunning = false;
-        }
-    }
-    // Incorrect guess.  Push to guesses[], subtract 1 from remainingGuesses, end game if remainingGuesses === 0
-    else {
-        this.guesses.push(guess);
-        this.remainingGuesses -= 1;
-        if (this.remainingGuesses === 0){
-            msgs.textContent = `You lose!  The word was: ${this.word.join('')}`;
-            this.gameRunning = false;
+        // Incorrect guess.  Push to guesses[], subtract 1 from remainingGuesses, end game if remainingGuesses === 0
+        else {
+            this.guesses.push(guess);
+            this.remainingGuesses--;
+            if (this.remainingGuesses === 0) {
+                msgs.textContent = `You lose!  The word was: ${this.word.join('')}`;
+                this.gameRunning = false;
+            }
         }
     }
 }
 
 // Called by input keyup event listener below
-function makeGuess(e){
+function makeGuess(e) {
     if(game.gameRunning){
         const guess = String.fromCharCode(e.charCode);
         game.checkGuess(guess);
@@ -79,9 +76,9 @@ function makeGuess(e){
 }
 
 // Called by button click event listener below
-function newGame(){
+function newGame() {
     let userWord = document.querySelector('#userWord');
-    if (userWord.value === ''){
+    if (userWord.value === '') {
         game = new Hangman(getWord());
     }else game = new Hangman(userWord.value);
     userWord.value = '';
@@ -96,7 +93,7 @@ document.querySelector('#new').addEventListener('click', newGame)
 window.addEventListener('keypress', makeGuess)
 
 // Random word generator
-const getWord = function (){
+const getWord = function () {
     const words = ['abruptly', 'absurd', 'abyss', 'affix', 'askew', 'avenue', 'awkward', 'axiom', 'azure', 'bagpipes', 'bandwagon'
 , 'banjo', 'bayou', 'beekeeper', 'bikini', 'blitz', 'blizzard', 'boggle', 'bookworm', 'boxcar', 'boxful'
 , 'buckaroo', 'buffalo', 'buffoon', 'buxom', 'buzzard', 'buzzing', 'buzzwords', 'caliph', 'cobweb', 'cockiness'

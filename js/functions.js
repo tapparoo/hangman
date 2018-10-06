@@ -12,6 +12,7 @@ const Hangman = function (word, remainingGuesses = 10) {
     this.remainingGuesses = remainingGuesses;
     // Ignore spaces
     this.revealed = this.word.map(char => char === ' ' ? ' ' : '*');
+    this.gameRunning = true;
     this.updateGameStatus();
 }
 
@@ -54,7 +55,7 @@ Hangman.prototype.checkGuess = function(g){
         // If no more asterisks, user wins & game is over
         if (this.revealed.findIndex(char => char === '*') < 0){
             msgs.textContent = `Congrats, you win!  The word was ${this.word.join('')}`;
-            input.disabled = true;
+            this.gameRunning = false;
         }
     }
     // Incorrect guess.  Push to guesses[], subtract 1 from remainingGuesses, end game if remainingGuesses === 0
@@ -63,30 +64,36 @@ Hangman.prototype.checkGuess = function(g){
         this.remainingGuesses -= 1;
         if (this.remainingGuesses === 0){
             msgs.textContent = `You lose!  The word was: ${this.word.join('')}`;
-            input.disabled = true;
+            this.gameRunning = false;
         }
     }
 }
 
 // Called by input keyup event listener below
 function makeGuess(e){
-    game.checkGuess(e.target.value);
-    game.updateGameStatus();
-    e.target.value = '';
+    if(game.gameRunning){
+        const guess = String.fromCharCode(e.charCode);
+        game.checkGuess(guess);
+        game.updateGameStatus();
+    }
 }
 
 // Called by button click event listener below
 function newGame(){
-    game = new Hangman(getWord());
+    let userWord = document.querySelector('#userWord');
+    if (userWord.value === ''){
+        game = new Hangman(getWord());
+    }else game = new Hangman(userWord.value);
+    userWord.value = '';
+    
     msgs.textContent = '';
-    input.disabled = false;
 }
 
 // New game on button click
 document.querySelector('#new').addEventListener('click', newGame)
 
 // Update game values per key press
-input.addEventListener('keyup', makeGuess)
+window.addEventListener('keypress', makeGuess)
 
 // Random word generator
 const getWord = function (){

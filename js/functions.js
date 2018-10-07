@@ -71,7 +71,7 @@ Hangman.prototype.checkGuess = function(g){
 
 // Called by input keyup event listener below
 function makeGuess(e){
-    if(game.gameRunning){
+    if(game.gameRunning && e.target.id != 'userWord'){
         const guess = String.fromCharCode(e.charCode);
         game.checkGuess(guess);
         game.updateGameStatus();
@@ -80,7 +80,7 @@ function makeGuess(e){
 
 // Called by button click event listener below
 function newGame(){
-    let userWord = document.querySelector('#userWord');
+    const userWord = document.querySelector('#userWord');
     if (userWord.value === ''){
         game = new Hangman(getWord());
     }else game = new Hangman(userWord.value);

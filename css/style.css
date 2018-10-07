@@ -1,6 +1,9 @@
 #gameContainer {
     display:flex;
 }
+#userWord{
+    width: 55%
+}
 
 #game{
     width: 300px;

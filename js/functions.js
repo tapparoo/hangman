@@ -67,13 +67,8 @@ class Hangman {
 }
 
 // Called by input keyup event listener below
-<<<<<<< HEAD
 function makeGuess(e){
     if(game.gameRunning && e.target.id != 'userWord'){
-=======
-function makeGuess(e) {
-    if(game.gameRunning){
->>>>>>> c6ff3a0ce57e466a9498cb846d96f8e53360c633
         const guess = String.fromCharCode(e.charCode);
         game.checkGuess(guess);
         game.updateGameStatus();
@@ -81,15 +76,9 @@ function makeGuess(e) {
 }
 
 // Called by button click event listener below
-<<<<<<< HEAD
 function newGame(){
     const userWord = document.querySelector('#userWord');
-    if (userWord.value === ''){
-=======
-function newGame() {
-    let userWord = document.querySelector('#userWord');
     if (userWord.value === '') {
->>>>>>> c6ff3a0ce57e466a9498cb846d96f8e53360c633
         game = new Hangman(getWord());
     }else game = new Hangman(userWord.value);
     userWord.value = '';

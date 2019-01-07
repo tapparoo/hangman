@@ -1,1 +1,1 @@
-https://taptaptapparoo.github.io/hangman/index.html
+https://tapparoo.github.io/hangman/index.html
